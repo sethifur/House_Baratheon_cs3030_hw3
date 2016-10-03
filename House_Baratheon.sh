@@ -8,7 +8,7 @@ usage() {
 	echo "All three optiions are required"
 }
 
-if [[ ${#} -ne 3 ]] || [[ ${1} == "--help" ]]
+if [[ ${#} -ne 6 ]] || [[ ${1} == "--help" ]]
 then
 	usage
 	exit 1
@@ -16,20 +16,26 @@ fi
 
 while getopts ":a:s:i:" opt;
 do
-	case opt in
+	case $opt in
 		a)
-			#TODO
+			awkFile=$OPTARG
 			;;
 		s)
-			#TODO
+			sedFile=$OPTARG
 			;;
 		i)
-			#TODO
+			inputFile=$OPTARG
 			;;
 		*)
 			usage
+			exit 2
 			;;
 	esac
 done
+
+$(sed -f $sedFile $inputFile > outputFile.csv)
+echo "$(awk -f $awkFile outputFile.csv > 20CenturyPresidents.csv)"
+$(rm outputFile.csv)
+echo "Your result is in 20CentryPresidents.csv"
 
 exit 0
